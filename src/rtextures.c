@@ -3111,6 +3111,7 @@ Color *LoadImageColors(Image image)
                     pixels[i].b = 0;
                     pixels[i].a = 255;
 
+                    k += 1;
                 } break;
                 case PIXELFORMAT_UNCOMPRESSED_R32G32B32:
                 {
@@ -3124,9 +3125,9 @@ Color *LoadImageColors(Image image)
                 case PIXELFORMAT_UNCOMPRESSED_R32G32B32A32:
                 {
                     pixels[i].r = (unsigned char)(((float *)image.data)[k]*255.0f);
-                    pixels[i].g = (unsigned char)(((float *)image.data)[k]*255.0f);
-                    pixels[i].b = (unsigned char)(((float *)image.data)[k]*255.0f);
-                    pixels[i].a = (unsigned char)(((float *)image.data)[k]*255.0f);
+                    pixels[i].g = (unsigned char)(((float *)image.data)[k + 1]*255.0f);
+                    pixels[i].b = (unsigned char)(((float *)image.data)[k + 2]*255.0f);
+                    pixels[i].a = (unsigned char)(((float *)image.data)[k + 3]*255.0f);
 
                     k += 4;
                 } break;
@@ -3137,6 +3138,7 @@ Color *LoadImageColors(Image image)
                     pixels[i].b = 0;
                     pixels[i].a = 255;
 
+                    k += 1;
                 } break;
                 case PIXELFORMAT_UNCOMPRESSED_R16G16B16:
                 {
@@ -3150,9 +3152,9 @@ Color *LoadImageColors(Image image)
                 case PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
                 {
                     pixels[i].r = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k])*255.0f);
-                    pixels[i].g = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k])*255.0f);
-                    pixels[i].b = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k])*255.0f);
-                    pixels[i].a = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k])*255.0f);
+                    pixels[i].g = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k + 1])*255.0f);
+                    pixels[i].b = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k + 2])*255.0f);
+                    pixels[i].a = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k + 3])*255.0f);
 
                     k += 4;
                 } break;
@@ -3656,7 +3658,7 @@ void ImageDrawLineEx(Image *dst, Vector2 start, Vector2 end, int thick, Color co
     {
         // Line is more horizontal
         // Calculate half the width of the line
-        int wy = (thick - 1)*sqrtf(dx*dx + dy*dy)/(2*abs(dx));
+        int wy = (thick - 1)*(int)sqrtf((float)(dx*dx + dy*dy))/(2*abs(dx));
 
         // Draw additional lines above and below the main line
         for (int i = 1; i <= wy; i++)
@@ -3669,7 +3671,7 @@ void ImageDrawLineEx(Image *dst, Vector2 start, Vector2 end, int thick, Color co
     {
         // Line is more vertical or perfectly horizontal
         // Calculate half the width of the line
-        int wx = (thick - 1)*sqrtf(dx*dx + dy*dy)/(2*abs(dy));
+        int wx = (thick - 1)*(int)sqrtf((float)(dx*dx + dy*dy))/(2*abs(dy));
 
         // Draw additional lines to the left and right of the main line
         for (int i = 1; i <= wx; i++)
